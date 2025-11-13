@@ -1,0 +1,110 @@
+body {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: #111827 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+}
+.navbar-brand {
+    font-weight: 600;
+    color: #fff !important;
+}
+.navbar .btn-outline-light {
+    border-color: #9ca3af;
+    color: #f9fafb;
+}
+.navbar .btn-outline-light:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+}
+
+/* DASHBOARD */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #f9fafb;
+    text-align: center;
+}
+.dashboard-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+.dashboard-title {
+    margin-bottom: 6px;
+    font-size: 32px;
+    font-weight: 600;
+}
+.dashboard-sub {
+    margin-bottom: 40px;
+    font-size: 15px;
+    color: #9ca3af;
+}
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* card ke 4 (user) pindah ke tengah */
+.menu-grid .menu-card:nth-child(4) {
+    grid-column: 2;
+}
+
+/* card ke 5 (riwayat) ke kolom kanan */
+.menu-grid .menu-card:nth-child(5) {
+    grid-column: 3;
+}
+.menu-card {
+    background: #1f2937;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    padding: 2rem 1rem;
+    transition: 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.menu-card:hover {
+    transform: translateY(-8px);
+    background: #374151;
+    border-color: #2563eb;
+}
+.menu-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+.menu-card a {
+    color: #f9fafb;
+    text-decoration: none;
+    font-weight: 600;
+}
+.menu-card small {
+    display: block;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .menu-grid .menu-card:nth-child(4),
+    .menu-grid .menu-card:nth-child(5) {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .menu-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* row 2 center */
+.menu-grid .menu-card:nth-child(4) { grid-column: 2; }
+.menu-grid .menu-card:nth-child(5) { grid-column: 3; }

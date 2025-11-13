@@ -7,25 +7,47 @@ use Illuminate\Support\Facades\DB;
 
 class MapController extends Controller
 {
-    public function index()
+    /**
+     * 🗺️ Mode View — hanya menampilkan peta dan marker.
+     */
+    public function view()
     {
-        // Ambil semua lokasi dari tabel locations
         $locations = DB::table('locations')->get();
 
-        // Untuk tiap lokasi, ambil daftar CCTV-nya
         $data = [];
         foreach ($locations as $loc) {
             $cctvs = DB::table('cctvs')->where('location_id', $loc->id)->get();
             $data[] = [
                 'id' => $loc->id,
                 'name' => $loc->name,
-                'lat' => $loc->lat,
-                'lon' => $loc->lon,
+                'lat' => (float) $loc->lat,
+                'lon' => (float) $loc->lon,
                 'cctvs' => $cctvs
             ];
         }
 
-        // Kirim data ke view dalam bentuk JSON agar mudah dibaca oleh JavaScript
-        return view('map', ['locations' => json_encode($data)]);
+        return view('pages.map.view.index', ['locations' => $data]);
+    }
+
+    /**
+     * 🛠️ Mode Editor — bisa tambah, edit, dan hapus marker.
+     */
+    public function editor()
+    {
+        $locations = DB::table('locations')->get();
+
+        $data = [];
+        foreach ($locations as $loc) {
+            $cctvs = DB::table('cctvs')->where('location_id', $loc->id)->get();
+            $data[] = [
+                'id' => $loc->id,
+                'name' => $loc->name,
+                'lat' => (float) $loc->lat,
+                'lon' => (float) $loc->lon,
+                'cctvs' => $cctvs
+            ];
+        }
+
+        return view('pages.map.editor.index', ['locations' => $data]);
     }
 }

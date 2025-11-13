@@ -26,10 +26,36 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // 🔹 Cek status akun setelah autentikasi berhasil
+        $user = auth()->user();
+
+        if ($user->status === 'pending') {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Akun Anda masih menunggu persetujuan admin.',
+            ]);
+        }
+
+        if ($user->status === 'inactive') {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi admin.',
+            ]);
+        }
+
+        // 🔹 Jika status aktif, lanjutkan
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // 🔹 Tambahkan logika redirect berdasarkan role
+        if ($user->role === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        // Untuk user biasa
+        return redirect()->intended('/dashboard');
     }
+
+
 
     /**
      * Destroy an authenticated session.

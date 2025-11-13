@@ -9,27 +9,21 @@ class Cctv extends Model
 {
     use HasFactory;
 
-    /**
-     * ====================================================
-     *  PENGATURAN MODEL
-     * ====================================================
-     */
+    // Kolom yang dapat diisi massal
+        protected $fillable = [
+            'location_id',
+            'name',
+            'ip_address',
+            'port',
+            'username',
+            'password',
+            'protocol',
+            'url',
+            'stream_path',
+        ];
 
-    // Kolom yang dapat diisi massal (mass assignable)
-    protected $fillable = [
-        'location_id',
-        'name',
-        'url',
-    ];
-
-    // Nonaktifkan timestamps (karena tabel kamu tidak punya created_at / updated_at)
+    // Nonaktifkan timestamps
     public $timestamps = false;
-
-    /**
-     * ====================================================
-     *  RELASI DENGAN TABEL LAIN
-     * ====================================================
-     */
 
     // Setiap CCTV dimiliki oleh satu lokasi
     public function location()
@@ -37,19 +31,13 @@ class Cctv extends Model
         return $this->belongsTo(Location::class, 'location_id', 'id');
     }
 
-    /**
-     * ====================================================
-     *  FUNGSI TAMBAHAN (OPSIONAL)
-     * ====================================================
-     */
+    // === FUNGSI TAMBAHAN OPSIONAL ===
 
-    // Dapatkan URL video streaming dengan fallback
     public function getStreamUrlAttribute()
     {
         return $this->url ?: '#';
     }
 
-    // Menampilkan label ringkas (menggunakan null-safe operator agar tidak error)
     public function getLabelAttribute()
     {
         $locationName = $this->location?->name ?? 'Tidak diketahui';

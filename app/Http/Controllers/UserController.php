@@ -8,86 +8,68 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $users = User::latest()->paginate(10);
-        return view('users.index', compact('users'));
+        return view('users.table', [
+            'users' => User::latest()->paginate(10)
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $r)
     {
-        $request->validate([
+        $r->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed'
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'role' => 'required|in:admin,user',
+            'password' => 'required|min:8|confirmed',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'name' => $r->name,
+            'username' => $r->username,
+            'email' => $r->email,
+            'role' => $r->role,
+            'password' => Hash::make($r->password),
         ]);
 
-        return redirect()
-            ->route('user.index')
-            ->with('message', 'User baru ditambahkan');
+        return back()->with('success', '✅ User baru berhasil ditambahkan.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
+    public function update(Request $r, User $user)
     {
-        $request->validate([
+        $r->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'role' => 'required|in:admin,user',
+            'password' => 'nullable|min:8|confirmed',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->update([
+            'name' => $r->name,
+            'username' => $r->username,
+            'email' => $r->email,
+            'role' => $r->role,
+            'password' => $r->filled('password') ? Hash::make($r->password) : $user->password,
+        ]);
 
-        if (!empty($request->password)) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return redirect()
-            ->route('user.index')
-            ->with('message', 'Sukses mengupdate User');
+        return redirect()->route('users.index')->with('success', '✅ Data user berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         $user->delete();
-
-        return redirect()
-            ->route('user.index')
-            ->with('message', 'User deleted successfully');
+        return back()->with('success', '🗑️ User berhasil dihapus.');
     }
 }

@@ -1,0 +1,66 @@
+###############################################
+# Global settings
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+logFile: mediamtx.log
+readTimeout: 10s
+writeTimeout: 10s
+writeQueueSize: 512
+udpMaxPayloadSize: 1472
+
+###############################################
+# Authentication
+###############################################
+
+authMethod: internal
+authInternalUsers:
+  - user: any
+    pass:
+    ips: []
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+
+###############################################
+# Protocol servers
+###############################################
+
+rtsp: yes
+rtspAddress: :8554
+rtmp: yes
+rtmpAddress: :1935
+hls: yes
+hlsAddress: :8888
+webrtc: yes
+webrtcAddress: :8889
+srt: yes
+srtAddress: :8890
+
+###############################################
+# Default path settings
+###############################################
+
+pathDefaults:
+  source: publisher
+  overridePublisher: yes
+
+###############################################
+# Path settings
+###############################################
+
+paths:
+  office_1:
+    runOnInit: >
+      ffmpeg -rtsp_transport tcp -i "rtsp://admin:4daro123.@192.168.33.77:554/Streaming/Channels/101" -vf scale=1280:720 -c:v libx264 -preset veryfast -tune zerolatency -f rtsp "rtsp://127.0.0.1:8554/office_1_h264"
+
+  office_1_h264:
+    source: publisher
+  office_2:
+    runOnInit: >
+      ffmpeg -rtsp_transport tcp -i "rtsp://admin:4daro123.@192.168.33.77:554/Streaming/Channels/101" -vf scale=1280:720 -c:v libx264 -preset veryfast -tune zerolatency -f rtsp "rtsp://127.0.0.1:8554/office_2_h264"
+
+  office_2_h264:
+    source: publisher

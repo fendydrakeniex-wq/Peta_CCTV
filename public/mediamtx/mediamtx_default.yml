@@ -1,0 +1,52 @@
+###############################################
+# Global settings
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+logFile: mediamtx.log
+readTimeout: 10s
+writeTimeout: 10s
+writeQueueSize: 512
+udpMaxPayloadSize: 1472
+
+###############################################
+# Authentication
+###############################################
+
+authMethod: internal
+authInternalUsers:
+  - user: any
+    pass:
+    ips: []
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+
+###############################################
+# Protocol servers
+###############################################
+
+rtsp: yes
+rtspAddress: :8554
+rtmp: yes
+rtmpAddress: :1935
+hls: yes
+hlsAddress: :8888
+webrtc: yes
+webrtcAddress: :8889
+srt: yes
+srtAddress: :8890
+
+###############################################
+# Default path settings
+###############################################
+
+pathDefaults:
+  source: publisher
+  overridePublisher: yes
+
+###############################################
+# Path settings
+###############################################
